@@ -665,6 +665,7 @@ public:
    * \throw InotifyException thrown if the provided pointer is NULL
    */
   bool GetEvent(InotifyEvent* pEvt) throw (InotifyException);
+  void ClearEvent(void);
   
   /// Extracts a queued inotify event.
   /**
