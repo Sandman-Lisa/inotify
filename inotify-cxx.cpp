@@ -34,7 +34,7 @@
 
 // Use this if syscalls not defined
 #ifndef __NR_inotify_init
-#include <sys/inotify.h>
+#include <sys/inotify-syscalls.h>
 #endif // __NR_inotify_init
 
 #include "inotify-cxx.h"
@@ -477,28 +477,15 @@ bool Inotify::GetEvent(InotifyEvent* pEvt) throw (InotifyException)
   
   IN_WRITE_BEGIN
   
-  bool b = false;
-  while(!m_events.empty()) {
-    
-    if(m_events.front().GetMask() == IN_MODIFY) {
-      *pEvt = m_events.front();
-      b = true;
-    }
-      
+  bool b = !m_events.empty();
+  if (b) {
+    *pEvt = m_events.front();
     m_events.pop_front();
   }
-
-  IN_WRITE_END
-  return b;
-}
-
-void Inotify::ClearEvent(void)
-{
-  IN_WRITE_BEGIN
-
-  m_events.clear();
   
   IN_WRITE_END
+    
+  return b;
 }
   
 bool Inotify::PeekEvent(InotifyEvent* pEvt) throw (InotifyException)
